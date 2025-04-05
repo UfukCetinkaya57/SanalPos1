@@ -26,12 +26,20 @@ namespace SanalPos.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator,Manager")]
-        public async Task<ActionResult<Guid>> Create(CreateProductCommand command)
+        [Authorize(Roles = "Admin")] // Sadece Admin rolüne sahip kullanýcýlar ürün ekleyebilir
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
         {
-            var productId = await Mediator.Send(command);
-            return CreatedAtAction(nameof(GetProduct), new { id = productId }, productId);
+            var result = await Mediator.Send(command);
+            return Ok(result);
         }
+
+        //[HttpPost]
+        //[Authorize(Roles = "Administrator,Manager")]
+        //public async Task<ActionResult<Guid>> Create(CreateProductCommand command)
+        //{
+        //    var productId = await Mediator.Send(command);
+        //    return CreatedAtAction(nameof(GetProduct), new { id = productId }, productId);
+        //}
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin,Manager")]
